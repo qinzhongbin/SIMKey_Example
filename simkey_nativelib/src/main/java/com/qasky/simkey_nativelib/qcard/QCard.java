@@ -16,6 +16,8 @@ public class QCard {
         System.loadLibrary("native-qcard");
     }
 
+    public native void setLogCallBack();
+
     /**
      * 枚举设备
      */
@@ -207,4 +209,9 @@ public class QCard {
      * @return 协商信息
      */
     public native NegotiateInfo negoOLBizKey(String host, String deviceId, String systemId, String secretId, String serverId, String visitKeyBase64, String protectKey);
+
+//    /**
+//     * 设置设备文件路径
+//     */
+//    public native boolean setRedirectFilePath(String filePath);
 }

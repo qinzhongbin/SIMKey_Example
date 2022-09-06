@@ -42,6 +42,7 @@ import com.qasky.simkey_nativelib.sdmp.SDMP;
 
 import org.bouncycastle.util.encoders.Base64;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -113,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
 
         qCard = QCard.getInstance();
         sdmp = SDMP.getInstance();
+
+        qCard.setLogCallBack();
+
+//        boolean success = qCard.setRedirectFilePath(getFilesDir().getAbsolutePath());
+//        ToastUtils.showLong("设置设备文件路径" + (success ? "成功" : "失败"));
     }
 
     private void resetParams() {
@@ -155,16 +161,15 @@ public class MainActivity extends AppCompatActivity {
     public void initSystem(View view) {
         waitingDialog.show();
         new Thread(() -> {
-//            sdmp.test();
             if (sdmp.sessionInit()) {
-                if (sdmp.login(host, "qzb", "QaSky1234")) {
+                if (sdmp.login(host, "qzb", "Ql172602")) {
                     sdmp.enumDevice();
                     String deviceId = sdmp.getDeviceId(0);
                     String systemId = "000000056";
                     String userId = "test_simkey";
-                    Result unbindSystem = sdmp.unbindSystem(deviceId, appName);
-                    LogUtils.d(unbindSystem);
-                    ToastUtils.showLong("解绑系统" + appName + (unbindSystem.error_code == 0 ? "成功" : "失败") + "\n" + unbindSystem.msg);
+//                    Result unbindSystem = sdmp.unbindSystem(deviceId, appName);
+//                    LogUtils.d(unbindSystem);
+//                    ToastUtils.showLong("解绑系统" + appName + (unbindSystem.error_code == 0 ? "成功" : "失败") + "\n" + unbindSystem.msg);
                     Result initSystem = sdmp.initSystem(deviceId, systemId, new Cert(userPIN, userId, "软件部", "0fd2260c15e7409f88900d58826b2c70", "安徽问天量子科技股份有限公司", "芜湖", "安徽", "CN"));
                     LogUtils.d(initSystem);
                     ToastUtils.showLong("初始化系统" + appName + (initSystem.error_code == 0 ? "成功" : "失败") + "\n" + initSystem.msg);
@@ -490,4 +495,5 @@ public class MainActivity extends AppCompatActivity {
         String signPubKeyPem = new String(signPubKey, StandardCharsets.UTF_8);
         Log.d(LOG_TAG, "签名公钥：\n" + signPubKeyPem);
     }
+
 }

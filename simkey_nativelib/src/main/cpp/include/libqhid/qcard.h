@@ -893,6 +893,13 @@ QCARD_API int QCard_VerifyAgreementQKey(QHANDLE hStoreHandle, KEYPARAMHANDLE hKe
 *******************************************************************************/
 QCARD_API void QCard_DestroyKeyParamHandle(QHANDLE hStoreHandle, KEYPARAMHANDLE hKeyParamHandle);
 
+QCARD_API int QCard_ResetDefaultApp(QHANDLE qHandle);
+
+//QCARD_API int QCard_SetRedirectFilePath(char* filePath);
+
+QCARD_API void QCard_LogSetCallBack(void (*cb)(int level, char *msg), int lverror, int lvwarn, int lvinfo, int lvdebug, int lvtrace);
+
+
 #ifdef  __cplusplus
 }
 #endif  /* #ifdef  __cplusplus */

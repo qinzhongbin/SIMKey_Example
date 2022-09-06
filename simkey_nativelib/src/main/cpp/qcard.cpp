@@ -5,9 +5,20 @@
 #include <skfapi.h>
 #include <libqhid/qcard_skf.h>
 #include <libqhid/qcard_store.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 QHANDLES devHandles;
 QHANDLE devHandle;
+
+void debug_print(int level, char *msg) {
+    LOGE("%d:%s", level, msg);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_qasky_simkey_1nativelib_qcard_QCard_setLogCallBack(JNIEnv *env, jobject thiz) {
+    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
+}
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -125,7 +136,9 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_deleteApp(JNIEnv *env, jobject thiz
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_qasky_simkey_1nativelib_qcard_QCard_formatDevice(JNIEnv *env, jobject thiz) {
-    int ret = QCard_FormatDevice(devHandle, 1);
+    int ret = QCard_ResetDefaultApp(devHandle);
+    LOGD("QCard_ResetDefaultApp ret = 0x%08x", ret);
+    ret = QCard_FormatDevice(devHandle, 1);
     LOGD("QCard_FormatDevice ret = 0x%08x", ret);
     return !ret;
 }
@@ -165,11 +178,6 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_chargeKey(JNIEnv *env, jobject thiz
     char *appName = const_cast<char *>(env->GetStringUTFChars(app_name, JNI_FALSE));
     char *conName = const_cast<char *>(env->GetStringUTFChars(con_name, JNI_FALSE));
     char *userPIN = const_cast<char *>(env->GetStringUTFChars(user_pin, JNI_FALSE));
-
-
-
-//    QCard_SetSSL(0);
-
 
     int ret = QCard_ProxyOnlineChargingKey(devHandle, host, appName, conName, userPIN, 32);
     LOGD("QCard_ProxyOnlineChargingKey ret = 0x%08x", ret);
@@ -387,3 +395,11 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLBizKey(JNIEnv *env, jobject t
 //    }
 }
 
+//extern "C"
+//JNIEXPORT jboolean JNICALL
+//Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
+//    char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
+//    int ret = QCard_SetRedirectFilePath(filePath);
+//    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
+//    return !ret;
+//}

@@ -44,20 +44,8 @@ Java_com_qasky_simkey_1nativelib_sdmp_SDMP_getDeviceId(JNIEnv *env, jobject thiz
 }
 
 extern "C"
-{
-void QCard_LogSetCallBack(void (*cb)(int level, char *msg), int lverror, int lvwarn, int lvinfo, int lvdebug, int lvtrace);
-}
-
-void debug_print(int level, char *msg) {
-    LOGE("%d:%s", level, msg);
-}
-
-extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_qasky_simkey_1nativelib_sdmp_SDMP_login(JNIEnv *env, jobject thiz, jstring _host, jstring user_name, jstring _pwd) {
-
-    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
-
     const char *host = env->GetStringUTFChars(_host, JNI_FALSE);
     const char *userName = env->GetStringUTFChars(user_name, JNI_FALSE);
     const char *pwd = env->GetStringUTFChars(_pwd, JNI_FALSE);

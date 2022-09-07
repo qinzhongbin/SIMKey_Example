@@ -39,10 +39,8 @@ import com.qasky.simkey_nativelib.sdmp.Cert;
 import com.qasky.simkey_nativelib.sdmp.Result;
 import com.qasky.simkey_nativelib.sdmp.SDMP;
 
-
 import org.bouncycastle.util.encoders.Base64;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;

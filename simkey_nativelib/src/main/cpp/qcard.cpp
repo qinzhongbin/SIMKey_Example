@@ -11,13 +11,22 @@
 QHANDLES devHandles;
 QHANDLE devHandle;
 
-void debug_print(int level, char *msg) {
-    LOGE("%d:%s", level, msg);
-}
+//void debug_print(int level, char *msg) {
+//    LOGE("%d:%s", level, msg);
+//}
+//extern "C"
+//JNIEXPORT void JNICALL
+//Java_com_qasky_simkey_1nativelib_qcard_QCard_setLogCallBack(JNIEnv *env, jobject thiz) {
+//    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
+//}
+
 extern "C"
-JNIEXPORT void JNICALL
-Java_com_qasky_simkey_1nativelib_qcard_QCard_setLogCallBack(JNIEnv *env, jobject thiz) {
-    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
+JNIEXPORT jboolean JNICALL
+Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
+    char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
+    int ret = QCard_SetRedirectFilePath(filePath);
+    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
+    return !ret;
 }
 
 extern "C"
@@ -179,7 +188,7 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_chargeKey(JNIEnv *env, jobject thiz
     char *conName = const_cast<char *>(env->GetStringUTFChars(con_name, JNI_FALSE));
     char *userPIN = const_cast<char *>(env->GetStringUTFChars(user_pin, JNI_FALSE));
 
-    int ret = QCard_ProxyOnlineChargingKey(devHandle, host, appName, conName, userPIN, 32);
+    int ret = QCard_ProxyOnlineChargingKey(devHandle, host, appName, conName, userPIN, 1024 * 10);
     LOGD("QCard_ProxyOnlineChargingKey ret = 0x%08x", ret);
 
     env->ReleaseStringUTFChars(_host, host);
@@ -365,41 +374,33 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_verifyAppPIN(JNIEnv *env, jobject t
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLBizKey(JNIEnv *env, jobject thiz, jstring _host, jstring device_id, jstring system_id, jstring secret_id, jstring server_id, jstring visit_key_base64, jstring protect_key) {
-//    char *host = const_cast<char *>(env->GetStringUTFChars(_host, JNI_FALSE));
-//    char *deviceId = const_cast<char *>(env->GetStringUTFChars(device_id, JNI_FALSE));
-//    char *systemId = const_cast<char *>(env->GetStringUTFChars(system_id, JNI_FALSE));
-//    char *secretId = const_cast<char *>(env->GetStringUTFChars(secret_id, JNI_FALSE));
-//    char *serverId = const_cast<char *>(env->GetStringUTFChars(server_id, JNI_FALSE));
-//    char *visitKeyBase64 = const_cast<char *>(env->GetStringUTFChars(visit_key_base64, JNI_FALSE));
-//    char *protectKey = const_cast<char *>(env->GetStringUTFChars(protect_key, JNI_FALSE));
-//    char *flag = nullptr;
-//    char checkCode[64] = {0};
-//
-//    int ret = QCard_ClientRequestOnlineBizKey(host, deviceId, systemId, secretId, serverId, visitKeyBase64, reinterpret_cast<const unsigned char *>(protectKey), &flag, checkCode);
-//    LOGD("QCard_ClientRequestOnlineBizKey ret = 0x%08x \nflag = \n%s\ncheckCode = %s", ret, flag, checkCode);
-//
-//    env->ReleaseStringUTFChars(_host, host);
-//    env->ReleaseStringUTFChars(device_id, deviceId);
-//    env->ReleaseStringUTFChars(system_id, systemId);
-//    env->ReleaseStringUTFChars(secret_id, secretId);
-//    env->ReleaseStringUTFChars(server_id, serverId);
-//    env->ReleaseStringUTFChars(visit_key_base64, visitKeyBase64);
-//    env->ReleaseStringUTFChars(protect_key, protectKey);
-//
-//    if (ret) {
+    char *host = const_cast<char *>(env->GetStringUTFChars(_host, JNI_FALSE));
+    char *deviceId = const_cast<char *>(env->GetStringUTFChars(device_id, JNI_FALSE));
+    char *systemId = const_cast<char *>(env->GetStringUTFChars(system_id, JNI_FALSE));
+    char *secretId = const_cast<char *>(env->GetStringUTFChars(secret_id, JNI_FALSE));
+    char *serverId = const_cast<char *>(env->GetStringUTFChars(server_id, JNI_FALSE));
+    char *visitKeyBase64 = const_cast<char *>(env->GetStringUTFChars(visit_key_base64, JNI_FALSE));
+    char *protectKey = const_cast<char *>(env->GetStringUTFChars(protect_key, JNI_FALSE));
+    char *flag = nullptr;
+    char checkCode[64] = {0};
+
+    int ret = QCard_ClientRequestOnlineBizKey(host, deviceId, systemId, secretId, serverId, visitKeyBase64, reinterpret_cast<const unsigned char *>(protectKey), &flag, checkCode);
+    LOGD("QCard_ClientRequestOnlineBizKey ret = 0x%08x \nflag = \n%s\ncheckCode = %s", ret, flag, checkCode);
+
+    env->ReleaseStringUTFChars(_host, host);
+    env->ReleaseStringUTFChars(device_id, deviceId);
+    env->ReleaseStringUTFChars(system_id, systemId);
+    env->ReleaseStringUTFChars(secret_id, secretId);
+    env->ReleaseStringUTFChars(server_id, serverId);
+    env->ReleaseStringUTFChars(visit_key_base64, visitKeyBase64);
+    env->ReleaseStringUTFChars(protect_key, protectKey);
+
+    if (ret) {
     return nullptr;
-//    } else {
-//        jclass clz_NegotiateInfo = env->FindClass("com/qasky/simkeyexample/qcard/NegotiateInfo");
-//        jobject obj_NegotiateInfo = env->NewObject(clz_NegotiateInfo, env->GetMethodID(clz_NegotiateInfo, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V"), env->NewStringUTF(flag), env->NewStringUTF(checkCode));
-//        return obj_NegotiateInfo;
-//    }
+    } else {
+        jclass clz_NegotiateInfo = env->FindClass("com/qasky/simkey_nativelib/qcard/NegotiateInfo");
+        jobject obj_NegotiateInfo = env->NewObject(clz_NegotiateInfo, env->GetMethodID(clz_NegotiateInfo, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V"), env->NewStringUTF(flag), env->NewStringUTF(checkCode));
+        return obj_NegotiateInfo;
+    }
 }
 
-//extern "C"
-//JNIEXPORT jboolean JNICALL
-//Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
-//    char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
-//    int ret = QCard_SetRedirectFilePath(filePath);
-//    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
-//    return !ret;
-//}

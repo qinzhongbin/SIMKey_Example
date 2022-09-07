@@ -16,7 +16,12 @@ public class QCard {
         System.loadLibrary("native-qcard");
     }
 
-    public native void setLogCallBack();
+//    public native void setLogCallBack();
+
+    /**
+     * 设置设备文件路径
+     */
+    public native boolean setRedirectFilePath(String filePath);
 
     /**
      * 枚举设备
@@ -122,6 +127,20 @@ public class QCard {
     public native boolean clearKey(String appName);
 
     /**
+     * 协商在线业务密钥
+     *
+     * @param host           主机
+     * @param deviceId       设备ID
+     * @param systemId       系统ID
+     * @param secretId       密钥ID
+     * @param serverId       密钥应用服务ID
+     * @param visitKeyBase64 安全认证密钥
+     * @param protectKey     保护密钥
+     * @return 协商信息
+     */
+    public native NegotiateInfo negoOLBizKey(String host, String deviceId, String systemId, String secretId, String serverId, String visitKeyBase64, String protectKey);
+
+    /**
      * 获取密钥句柄
      *
      * @param appName   应用名称
@@ -195,23 +214,4 @@ public class QCard {
      * @return 是否验证成功
      */
     public native boolean verifyAppPIN(String appName, String PIN);
-
-    /**
-     * 协商在线业务密钥
-     *
-     * @param host           主机
-     * @param deviceId       设备ID
-     * @param systemId       系统ID
-     * @param secretId       密钥ID
-     * @param serverId       密钥应用服务ID
-     * @param visitKeyBase64 安全认证密钥
-     * @param protectKey     保护密钥
-     * @return 协商信息
-     */
-    public native NegotiateInfo negoOLBizKey(String host, String deviceId, String systemId, String secretId, String serverId, String visitKeyBase64, String protectKey);
-
-//    /**
-//     * 设置设备文件路径
-//     */
-//    public native boolean setRedirectFilePath(String filePath);
 }

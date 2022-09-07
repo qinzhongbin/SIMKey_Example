@@ -895,7 +895,7 @@ QCARD_API void QCard_DestroyKeyParamHandle(QHANDLE hStoreHandle, KEYPARAMHANDLE 
 
 QCARD_API int QCard_ResetDefaultApp(QHANDLE qHandle);
 
-//QCARD_API int QCard_SetRedirectFilePath(char* filePath);
+QCARD_API int QCard_SetRedirectFilePath(char* filePath);
 
 QCARD_API void QCard_LogSetCallBack(void (*cb)(int level, char *msg), int lverror, int lvwarn, int lvinfo, int lvdebug, int lvtrace);
 

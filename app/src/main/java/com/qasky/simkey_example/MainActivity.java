@@ -113,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
         qCard = QCard.getInstance();
         sdmp = SDMP.getInstance();
 
-        qCard.setLogCallBack();
-
         boolean success = qCard.setRedirectFilePath(getFilesDir().getAbsolutePath());
         ToastUtils.showLong("设置设备文件路径" + (success ? "成功" : "失败"));
     }
@@ -475,12 +473,6 @@ public class MainActivity extends AppCompatActivity {
         byte[] signCert = qCard.exportCert(1, appName, conName);
         String signCertPem = new String(signCert, StandardCharsets.UTF_8);
         Log.d(LOG_TAG, "签名证书：\n" + signCertPem);
-    }
-
-    public void exportRootCert(View view) {
-//        byte[] rootCert = qCard.exportCert(2, appName, conName);
-//        String rootCertPem = new String(rootCert, StandardCharsets.UTF_8);
-//        LogUtils.d(rootCertPem);
     }
 
     public void exportEncPubKey(View view) {

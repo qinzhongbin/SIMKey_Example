@@ -11,13 +11,22 @@
 QHANDLES devHandles;
 QHANDLE devHandle;
 
-void debug_print(int level, char *msg) {
-    LOGE("%d:%s", level, msg);
-}
+//void debug_print(int level, char *msg) {
+//    LOGE("%d:%s", level, msg);
+//}
+//extern "C"
+//JNIEXPORT void JNICALL
+//Java_com_qasky_simkey_1nativelib_qcard_QCard_setLogCallBack(JNIEnv *env, jobject thiz) {
+//    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
+//}
+
 extern "C"
-JNIEXPORT void JNICALL
-Java_com_qasky_simkey_1nativelib_qcard_QCard_setLogCallBack(JNIEnv *env, jobject thiz) {
-    QCard_LogSetCallBack(debug_print, 1, 2, 3, 4, 5);
+JNIEXPORT jboolean JNICALL
+Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
+    char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
+    int ret = QCard_SetRedirectFilePath(filePath);
+    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
+    return !ret;
 }
 
 extern "C"
@@ -395,11 +404,3 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLBizKey(JNIEnv *env, jobject t
     }
 }
 
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
-    char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
-    int ret = QCard_SetRedirectFilePath(filePath);
-    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
-    return !ret;
-}

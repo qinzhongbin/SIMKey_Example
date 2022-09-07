@@ -16,7 +16,7 @@ public class QCard {
         System.loadLibrary("native-qcard");
     }
 
-    public native void setLogCallBack();
+//    public native void setLogCallBack();
 
     /**
      * 设置设备文件路径

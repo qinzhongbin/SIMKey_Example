@@ -259,18 +259,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="exportSignCert"
                 android:text="导出签名证书"
-                app:layout_constraintEnd_toStartOf="@+id/exportRootCert"
-                app:layout_constraintStart_toEndOf="@id/exportEncCert"
-                app:layout_constraintTop_toTopOf="@id/exportEncCert" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/exportRootCert"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="exportRootCert"
-                android:text="导出根证书"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/exportSignCert"
+                app:layout_constraintStart_toEndOf="@id/exportEncCert"
                 app:layout_constraintTop_toTopOf="@id/exportEncCert" />
 
             <androidx.appcompat.widget.AppCompatButton

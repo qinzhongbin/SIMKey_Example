@@ -292,6 +292,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/exportEncPubKey"
                 app:layout_constraintTop_toTopOf="@id/exportEncPubKey" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/verifyAppPIN"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:onClick="verifyAppPIN"
+                android:text="验证应用PIN"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/exportEncCert" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

@@ -56,7 +56,7 @@
                 android:id="@+id/userPIN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="20191818" />
+                android:text="12222222" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

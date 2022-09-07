@@ -19,7 +19,7 @@ public class QCard {
 //    public native void setLogCallBack();
 
     /**
-     * 设置设备文件路径
+     * 设置文件路径
      */
     public native boolean setRedirectFilePath(String filePath);
 
@@ -92,7 +92,6 @@ public class QCard {
      * @param appName 应用名称
      */
     public native boolean deleteApp(String appName);
-
 
     /**
      * 格式化设备

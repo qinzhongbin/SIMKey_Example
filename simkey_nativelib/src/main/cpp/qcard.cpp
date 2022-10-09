@@ -25,7 +25,7 @@ JNIEXPORT jboolean JNICALL
 Java_com_qasky_simkey_1nativelib_qcard_QCard_setRedirectFilePath(JNIEnv *env, jobject thiz, jstring file_path) {
     char *filePath = const_cast<char *>(env->GetStringUTFChars(file_path, JNI_FALSE));
     int ret = QCard_SetRedirectFilePath(filePath);
-    LOGD("QCard_ResetDefaultApp filePath = %s ret = 0x%08x", filePath, ret);
+    LOGD("QCard_SetRedirectFilePath filePath = %s ret = 0x%08x", filePath, ret);
     return !ret;
 }
 
@@ -188,7 +188,7 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_chargeKey(JNIEnv *env, jobject thiz
     char *conName = const_cast<char *>(env->GetStringUTFChars(con_name, JNI_FALSE));
     char *userPIN = const_cast<char *>(env->GetStringUTFChars(user_pin, JNI_FALSE));
 
-    int ret = QCard_ProxyOnlineChargingKey(devHandle, host, appName, conName, userPIN, 1024 * 10);
+    int ret = QCard_ProxyOnlineChargingKey(devHandle, host, appName, conName, userPIN, 1024 * 3);
     LOGD("QCard_ProxyOnlineChargingKey ret = 0x%08x", ret);
 
     env->ReleaseStringUTFChars(_host, host);

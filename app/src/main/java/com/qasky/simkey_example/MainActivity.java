@@ -26,6 +26,7 @@ import com.qasky.simkey_example.dto.CleanOLBizKeyResp;
 import com.qasky.simkey_example.dto.CreateOLBizKeyReq;
 import com.qasky.simkey_example.dto.CreateOLBizKeyResp;
 import com.qasky.simkey_example.dto.ExtServerConsultInfo;
+import com.qasky.simkey_example.dto.OnLineNegoInfo;
 import com.qasky.simkey_example.dto.RestResult;
 import com.qasky.simkey_example.dto.SvrNegoOLBizKeyReq;
 import com.qasky.simkey_example.dto.SvrNegoOLBizKeyResp;
@@ -112,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
         qCard = QCard.getInstance();
         sdmp = SDMP.getInstance();
+
+        qCard.setLogCallBack();
 
         boolean success = qCard.setRedirectFilePath(getFilesDir().getAbsolutePath());
         ToastUtils.showLong("设置设备文件路径" + (success ? "成功" : "失败"));
@@ -426,6 +429,20 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+
+    OnLineNegoInfo onLineNegoInfo;
+
+    public void negoOLKey(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String json = qCard.negoOLKey();
+                onLineNegoInfo = GsonUtils.fromJson(json, OnLineNegoInfo.class);
+                ToastUtils.showLong("服务端在线密钥协商" + (onLineNegoInfo != null ? "成功" : "失败"));
+            }
+        }).start();
+    }
+
     long keyHandle;
 
     public void getKeyHandle(View view) {
@@ -440,9 +457,35 @@ public class MainActivity extends AppCompatActivity {
                 .create().show();
     }
 
+
+    public void getOLKeyHandle(View view) {
+        String hexFlagChkV = onLineNegoInfo.getFlagChkV();
+        String hexCipherQKey = onLineNegoInfo.getCipherQKey();
+        byte[] flagChkV = ConvertUtils.hexString2Bytes(hexFlagChkV);
+        byte[] cipherQKey = ConvertUtils.hexString2Bytes(hexCipherQKey);
+
+        keyHandle = qCard.getOLKeyHandle(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), onLineNegoInfo.getAppName(), onLineNegoInfo.getConName(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
+        ToastUtils.showLong("在线协商密钥句柄: 0x" + Long.toHexString(keyHandle));
+    }
+
     public void freeKeyHandle(View view) {
         qCard.freeKeyHandle(keyHandle);
         ToastUtils.showLong("释放密钥句柄");
+    }
+
+    public void getSoftKey(View view) {
+        byte[] softKey = qCard.getSoftKey(keyHandle, Long.parseLong(softKeyLen));
+        ToastUtils.showLong(ConvertUtils.bytes2HexString(softKey));
+    }
+
+    public void getOLSoftKey(View view) {
+        String hexFlagChkV = onLineNegoInfo.getFlagChkV();
+        String hexCipherQKey = onLineNegoInfo.getCipherQKey();
+        byte[] flagChkV = ConvertUtils.hexString2Bytes(hexFlagChkV);
+        byte[] cipherQKey = ConvertUtils.hexString2Bytes(hexCipherQKey);
+
+        byte[] softKey = qCard.getOLSoftKey(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
+        ToastUtils.showLong(ConvertUtils.bytes2HexString(softKey));
     }
 
     byte[] cipher;
@@ -455,11 +498,6 @@ public class MainActivity extends AppCompatActivity {
     public void decrypt(View view) {
         byte[] plain = qCard.decrypt(keyHandle, cipher);
         ToastUtils.showLong(new String(plain, StandardCharsets.UTF_8));
-    }
-
-    public void getSoftKey(View view) {
-        byte[] softKey = qCard.getSoftKey(keyHandle, Long.parseLong(softKeyLen));
-        ToastUtils.showLong(ConvertUtils.bytes2HexString(softKey));
     }
 
     public void exportEncCert(View view) {
@@ -490,5 +528,15 @@ public class MainActivity extends AppCompatActivity {
     public void verifyAppPIN(View view) {
         boolean success = qCard.verifyAppPIN(appName, userPIN);
         ToastUtils.showLong("验证应用PIN: " + (success ? "成功" : "失败"));
+    }
+
+    public void test(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                qCard.negoOLKey2();
+            }
+        }).start();
     }
 }

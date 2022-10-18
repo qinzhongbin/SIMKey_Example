@@ -173,6 +173,7 @@
                 app:layout_constraintStart_toEndOf="@id/chargeKey"
                 app:layout_constraintTop_toTopOf="@id/queryKeyLength" />
 
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/CTSNegotiate"
                 android:layout_width="0dp"
@@ -189,9 +190,21 @@
                 android:layout_height="wrap_content"
                 android:onClick="negoOLBizKey"
                 android:text="协商在线业务密钥"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="12sp"
+                android:maxLines="1"
+                app:layout_constraintEnd_toStartOf="@id/negoOLKey"
                 app:layout_constraintStart_toEndOf="@id/CTSNegotiate"
                 app:layout_constraintTop_toTopOf="@id/CTSNegotiate" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                app:layout_constraintStart_toEndOf="@id/negoOLBizKey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/CTSNegotiate"
+                android:id="@+id/negoOLKey"
+                android:onClick="negoOLKey"
+                android:text="协商在线密钥"
+                android:layout_height="wrap_content"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/getKeyHandle"
@@ -199,9 +212,19 @@
                 android:layout_height="wrap_content"
                 android:onClick="getKeyHandle"
                 android:text="获取密钥句柄"
-                app:layout_constraintEnd_toStartOf="@id/freeKeyHandle"
+                app:layout_constraintEnd_toStartOf="@id/getOLKeyHandle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/CTSNegotiate" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:id="@+id/getOLKeyHandle"
+                app:layout_constraintStart_toEndOf="@id/getKeyHandle"
+                app:layout_constraintEnd_toStartOf="@id/freeKeyHandle"
+                app:layout_constraintTop_toTopOf="@id/getKeyHandle"
+                android:text="获取在线密钥句柄"
+                android:onClick="getOLKeyHandle"
+                android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/freeKeyHandle"
@@ -210,8 +233,28 @@
                 android:onClick="freeKeyHandle"
                 android:text="释放密钥句柄"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/getKeyHandle"
+                app:layout_constraintStart_toEndOf="@id/getOLKeyHandle"
                 app:layout_constraintTop_toTopOf="@id/getKeyHandle" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:id="@+id/getSoftKey"
+                android:text="获取软密钥"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/getOLSoftKey"
+                android:onClick="getSoftKey"
+                app:layout_constraintTop_toBottomOf="@id/getKeyHandle"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:id="@+id/getOLSoftKey"
+                app:layout_constraintStart_toEndOf="@id/getSoftKey"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="获取在线协商软密钥"
+                android:onClick="getOLSoftKey"
+                app:layout_constraintTop_toTopOf="@id/getSoftKey"
+                android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/encrypt"
@@ -221,7 +264,7 @@
                 android:text="加密"
                 app:layout_constraintEnd_toStartOf="@id/decrypt"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/getKeyHandle" />
+                app:layout_constraintTop_toBottomOf="@id/getSoftKey" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/decrypt"
@@ -233,15 +276,6 @@
                 app:layout_constraintStart_toEndOf="@id/encrypt"
                 app:layout_constraintTop_toTopOf="@id/encrypt" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/getSoftKey"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:onClick="getSoftKey"
-                android:text="获取软密钥"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/encrypt" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/exportEncCert"
@@ -251,7 +285,7 @@
                 android:text="导出加密证书"
                 app:layout_constraintEnd_toStartOf="@id/exportSignCert"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/getSoftKey" />
+                app:layout_constraintTop_toBottomOf="@id/encrypt" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/exportSignCert"
@@ -293,5 +327,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/exportEncPubKey" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:id="@+id/test"
+            android:onClick="test"
+            android:layout_height="wrap_content" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

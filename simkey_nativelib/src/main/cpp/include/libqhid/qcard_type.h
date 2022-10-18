@@ -11,13 +11,15 @@
 #include <stdint.h>
 typedef unsigned char	u8;
 typedef unsigned short	u16;
-//typedef unsigned long   u32; // 跨平台编译需要注意
+// 跨平台编译需要注意
+#ifndef def_U32
+#define def_U32
 #ifdef __linux__
 typedef unsigned int    u32;
 #else
 typedef unsigned long   u32;
 #endif
-
+#endif
 
 
 #ifndef NO_PADDING
@@ -32,7 +34,7 @@ typedef unsigned long   u32;
 
 /* 量子密钥加密标志位 */
 #define QKEY_PUBLIC_KEY_ENCRYPT (0)
-#define QKEY_NOT_ENCRYPT (1)  
+#define QKEY_NOT_ENCRYPT (1)
 #define QKEY_SYMMETRIC_KEY_ENCRYPT (2)
 
 /* 设备类型 */
@@ -43,34 +45,34 @@ typedef unsigned long   u32;
 
 
 /* 设备私密区&安全区错误码定义 */
-#define QCard_OK              0x00000000   /* 操作成功 */ 
-#define QCard_BASE            0xF4000000   /* 错误基 */ 
-#define QCard_READERR         0xF4000001   /* 读数据错误 */  
-#define QCard_WRITEERR        0xF4000002   /* 写数据失败 */ 
+#define QCard_OK              0x00000000   /* 操作成功 */
+#define QCard_BASE            0xF4000000   /* 错误基 */
+#define QCard_READERR         0xF4000001   /* 读数据错误 */
+#define QCard_WRITEERR        0xF4000002   /* 写数据失败 */
 #define QCard_PARAMERR        0xF4000003   /* 参数错误 */
-#define QCard_RESPONSEERR     0xF4000004   /* 获取到的数据错误 */  
-#define QCard_NODEVICE        0xF4000005   /* 没有设备 */  
-#define QCard_LOGSTATUS       0xF4000006   /* 登陆状态错误 */  
-#define QCard_SPACENOTENOUGH  0xF4000007   /* 磁盘空间不足 */  
-#define QCard_FILEDAMAGE      0xF4000008   /* 文件损坏 */ 
-#define QCard_NOTFINDID       0xF4000009   /* 索引错误 */  
-#define QCard_UNLAWFULNESS    0xF400000A   /* 读取密钥FLAG不合法 */ 
-#define QCard_KEYNOTUNIQUE    0xF400000B   /* 密钥重复写入 */  
-#define QCard_NOKEYPOOL       0xF400000C   /* 该对设备无密钥充注或者密钥不足 */ 
-#define QCard_NOINIT          0xF400000D   /* 未初始化 */  
-#define QCard_INITED          0xF400000E   /* 已初始化 */ 
-#define QCard_NOTFIND         0xF400000F   /* 没有找到目标 */  
-#define QCard_BUSY            0xF4000010   /* 设备繁忙 */  
-#define QCard_NOINDEX         0xF4000011   /* 没有索引  */ 
-#define QCard_EVENTFAIL       0xF4000012   /* 事务失败 */  
-#define QCard_PINLOCKED		  0xF4000013   /* PIN锁死 */ 
-#define QCard_PININCORRECT	  0xF4000014   /* PIN错误 */ 
-#define QCard_FILLKEYFAIL     0xF4000015   /* 充注密钥失败 */  
-#define QCard_CONSULTKEYFAIL  0xF4000016   /* 协商密钥失败 */ 
+#define QCard_RESPONSEERR     0xF4000004   /* 获取到的数据错误 */
+#define QCard_NODEVICE        0xF4000005   /* 没有设备 */
+#define QCard_LOGSTATUS       0xF4000006   /* 登陆状态错误 */
+#define QCard_SPACENOTENOUGH  0xF4000007   /* 磁盘空间不足 */
+#define QCard_FILEDAMAGE      0xF4000008   /* 文件损坏 */
+#define QCard_NOTFINDID       0xF4000009   /* 索引错误 */
+#define QCard_UNLAWFULNESS    0xF400000A   /* 读取密钥FLAG不合法 */
+#define QCard_KEYNOTUNIQUE    0xF400000B   /* 密钥重复写入 */
+#define QCard_NOKEYPOOL       0xF400000C   /* 该对设备无密钥充注或者密钥不足 */
+#define QCard_NOINIT          0xF400000D   /* 未初始化 */
+#define QCard_INITED          0xF400000E   /* 已初始化 */
+#define QCard_NOTFIND         0xF400000F   /* 没有找到目标 */
+#define QCard_BUSY            0xF4000010   /* 设备繁忙 */
+#define QCard_NOINDEX         0xF4000011   /* 没有索引  */
+#define QCard_EVENTFAIL       0xF4000012   /* 事务失败 */
+#define QCard_PINLOCKED		  0xF4000013   /* PIN锁死 */
+#define QCard_PININCORRECT	  0xF4000014   /* PIN错误 */
+#define QCard_FILLKEYFAIL     0xF4000015   /* 充注密钥失败 */
+#define QCard_CONSULTKEYFAIL  0xF4000016   /* 协商密钥失败 */
 #define QCard_CLEARKETFAIL    0xF4000017   /* 清理密钥失败 */
 #define QCard_OTHERERR        0xF4000018   /* 其它错误 */
-#define QCard_FILEINDEXFAIL   0xF4000019   /* 文件索引HASH校验错误 */ 
-#define QCard_DISKINDEXFAIL   0xF400001A   /* 磁盘索引HASH校验错误 */ 
+#define QCard_FILEINDEXFAIL   0xF4000019   /* 文件索引HASH校验错误 */
+#define QCard_DISKINDEXFAIL   0xF400001A   /* 磁盘索引HASH校验错误 */
 #define QCard_FILEOPENFAIL	  0xF400001B   /* 打开文件失败 */
 #define QCard_UNSTARTVERIFY   0xF400001C   /* 未开始设备校验流程 */
 #define QCard_UNSENTVERIFY    0xF400001D   /* 未发送开始校验PIN事件 */
@@ -144,7 +146,7 @@ typedef unsigned long   u32;
 #define SAR_FILE_ALREADY_EXIST			0x0A00002F
 #define SAR_NO_ROOM						0x0A000030
 #define SAR_FILE_NOT_EXIST				0x0A000031
-#define SAR_REACH_MAX_CONTAINER_COUNT	0x0A000032	
+#define SAR_REACH_MAX_CONTAINER_COUNT	0x0A000032
 
 //错误代码拓展
 #define  SAR_PIN_INFO_ERR 0x0A000033        //获取pin的信息出错
@@ -153,7 +155,7 @@ typedef unsigned long   u32;
 #define  SAR_GENECCKEYERR              0x0A000036          //产生ECC密钥错误
 
 #define QSKR_SUCCESS             0                          //成功
-#define QSKR_E_BASE              0xE8000000                 
+#define QSKR_E_BASE              0xE8000000
 #define QSKR_E_DEVICE_UNKNOWN    (SKR_E_BASE + 1)           //未知设备
 #define QSKR_E_NO_DEVICE         (SKR_E_BASE + 2)           //无设备
 #define QSKR_PIN_INCORRECT       (SKR_E_BASE + 3)           //错误pin
@@ -170,31 +172,31 @@ typedef unsigned long   u32;
 
 /* 算法定义 */
 #define SGD_SM1_ECB			0x00000101       /* SM1 ECB */
-#define SGD_SM1_CBC			0x00000102       /* SM1 CBC */ 
-#define SGD_SM1_CFB			0x00000104       /* SM1 CFB */ 
-#define SGD_SM1_OFB			0x00000108       /* SM1 OFB */ 
-#define SGD_SM1_MAC			0x00000110       /* SM1 MAC */ 
-#define SGD_SSF33_ECB       0x00000201       /* SSF33 ECB */ 
-#define SGD_SSF33_CBC       0x00000202       /* SSF33 CBC */ 
-#define SGD_SSF33_CFB       0x00000204       /* SSF33 CFB */ 
-#define SGD_SSF33_OFB       0x00000208       /* SSF33 OFB */ 
-#define SGD_SSF33_MAC       0x00000210       /* SSF33 MAC */ 
-#define SGD_SMS4_ECB		0x00000401       /* SMS4 ECB */ 
-#define SGD_SMS4_CBC		0x00000402       /* SMS4 CBC */ 
+#define SGD_SM1_CBC			0x00000102       /* SM1 CBC */
+#define SGD_SM1_CFB			0x00000104       /* SM1 CFB */
+#define SGD_SM1_OFB			0x00000108       /* SM1 OFB */
+#define SGD_SM1_MAC			0x00000110       /* SM1 MAC */
+#define SGD_SSF33_ECB       0x00000201       /* SSF33 ECB */
+#define SGD_SSF33_CBC       0x00000202       /* SSF33 CBC */
+#define SGD_SSF33_CFB       0x00000204       /* SSF33 CFB */
+#define SGD_SSF33_OFB       0x00000208       /* SSF33 OFB */
+#define SGD_SSF33_MAC       0x00000210       /* SSF33 MAC */
+#define SGD_SMS4_ECB		0x00000401       /* SMS4 ECB */
+#define SGD_SMS4_CBC		0x00000402       /* SMS4 CBC */
 #define SGD_SMS4_CBC_FILE	0x00001402       /* SMS4 CBC  file key */
 #define SGD_SMS4_CBC_DDK	0x00002402       /* SMS4 CBC  DDK */
 #define SGD_SMS4_CBC_WK		0x00004402       /* SMS4 CBC  WK */
-#define SGD_SMS4_CFB		0x00000404       /* SMS4 CFB */ 
-#define SGD_SMS4_OFB		0x00000408       /* SMS4 OFB */ 
+#define SGD_SMS4_CFB		0x00000404       /* SMS4 CFB */
+#define SGD_SMS4_OFB		0x00000408       /* SMS4 OFB */
 #define SGD_SMS4_OFB_WK		0x00004408       /* SMS4 CBC  WK */
-#define SGD_SMS4_MAC		0x00000410       /* SMS4 MAC */ 
-#define SGD_SMS4_MAC_DDK	0x00002410       /* SMS4 MAC */ 
-#define SGD_RSA				0x00010000       /* RSA */ 
-#define SGD_SM2_1			0x00020100       /* ECC Sign */ 
-#define SGD_SM2_2			0x00020200       /* ECC Exchange */ 
-#define SGD_SM2_3			0x00020400       /* ECC cipher */ 
+#define SGD_SMS4_MAC		0x00000410       /* SMS4 MAC */
+#define SGD_SMS4_MAC_DDK	0x00002410       /* SMS4 MAC */
+#define SGD_RSA				0x00010000       /* RSA */
+#define SGD_SM2_1			0x00020100       /* ECC Sign */
+#define SGD_SM2_2			0x00020200       /* ECC Exchange */
+#define SGD_SM2_3			0x00020400       /* ECC cipher */
 #define SGD_SM3				0x00000001       /* SM3 */
-#define SGD_SHA1			0x00000002       /* SHA1 */ 
+#define SGD_SHA1			0x00000002       /* SHA1 */
 #define SGD_SHA256			0x00000004       /* SHA256 */
 
 /* 安全策略 */
@@ -204,10 +206,10 @@ typedef unsigned long   u32;
 /* 分组密钥参数 */
 #define MAX_IV_LEN 32
 typedef struct{
-    unsigned char IV[MAX_IV_LEN];
-    unsigned long IVLen;
-    unsigned long PaddingType;
-    unsigned long FeedBitLen;
+	unsigned char IV[MAX_IV_LEN];
+	unsigned long IVLen;
+	unsigned long PaddingType;
+	unsigned long FeedBitLen;
 }QCard_BLOCKCIPHERPARAM;
 
 /* 接口句柄 */
@@ -217,14 +219,56 @@ typedef void  * KEYHANDLE;
 typedef void * KEYPARAMHANDLE;
 typedef void  * EVENTHANDLE;
 
+/* 安全通道句柄 */
+typedef void* SECHANDLE;
+typedef void* SECHANDLE_HTTPS;
+typedef void* SECHANDLE_TCP;
+
+/* 密码算法套件句柄 */
+typedef void* CRYPTOHANDLE;
+
+/* 硬密钥参数句柄 */
+typedef void* DEVQKEYPARAM;
+
+typedef struct
+{
+	char pcAppName[64];         /* 应用名 */
+	char pcConName[64];         /* 容器名 */
+	char pcPin[16];                   /* PIN码 */
+	unsigned long conType;      /* 容器类型  1-RSA 2-ECC */
+}QCARD_SYSTEM_INFO;
+
+/* 客户端非对称安全通道 */
+#define QCARD_CLIENT_ASYMMETRIC 0x01
+
+/* 客户端对称安全通道 */
+#define QCARD_CLIENT_SYMMETRIC 0x02
+
+/* 安全通道通信协议类型 */
+typedef enum
+{
+	PROTOCOL_TYPE_HTTPS = 0,
+	PROTOCOL_TYPE_TCP
+}QCARD_PROTOCOL_TYPE_ENUM;
+
+/* 安全通道认证密钥类型，对称密钥 */
+#define SECCHANNEL_SYMM_AUTH_KEY        1
+
+typedef struct
+{
+	QHANDLE hStoreHandle;
+	char system_id[32];
+	char pin[16];
+}QCARD_SECCHANNEL_ARG;
+
 /* 容器证书类型 */
 #define SKF_CONTAINER_ENC   0 /* 加密证书 */
 #define SKF_CONTAINER_SIGN  1 /* 签名证书 */
 #define SKF_CONTAINER_ROOT  2 /* 根证书 */
 
 /* 用户类型 */
-#define ADMIN_TYPE	0	/* admin PIN */ 
-#define USER_TYPE	1	/* user PIN */ 
+#define ADMIN_TYPE	0	/* admin PIN */
+#define USER_TYPE	1	/* user PIN */
 
 
 typedef struct {
@@ -232,21 +276,21 @@ typedef struct {
 	unsigned char minor;
 }QCard_VERSION;
 
-typedef struct{ 
-	QCard_VERSION     Version; 
-	char		      Manufacturer[64]; 
-	char              Issuer[64]; 
-	char              Label[32]; 
-	char              SerialNumber[32]; 
-	QCard_VERSION     HWVersion; 
-	QCard_VERSION     FirmwareVersion; 
-	unsigned long 	  AlgSymCap; 
-	unsigned long	  AlgAsymCap; 
-	unsigned long	  AlgHashCap; 
-	unsigned long	  DevAuthAlgId; 
-	unsigned long	  TotalSpace; 
-	unsigned long	  FreeSpace; 
-}QCard_DEVINFO; 
+typedef struct{
+	QCard_VERSION     Version;
+	char		      Manufacturer[64];
+	char              Issuer[64];
+	char              Label[32];
+	char              SerialNumber[32];
+	QCard_VERSION     HWVersion;
+	QCard_VERSION     FirmwareVersion;
+	unsigned long 	  AlgSymCap;
+	unsigned long	  AlgAsymCap;
+	unsigned long	  AlgHashCap;
+	unsigned long	  DevAuthAlgId;
+	unsigned long	  TotalSpace;
+	unsigned long	  FreeSpace;
+}QCard_DEVINFO;
 
 typedef struct{
 	char ConName[65];             /* 容器名称 */
@@ -257,13 +301,13 @@ typedef struct{
 	unsigned long EncKeyExist;    /* 加密密钥对是否存在 */
 }QCard_CON;
 
-typedef struct{ 
+typedef struct{
 	char AppName[65];
 	unsigned int Length;
 	QCard_CON *pContainers;
 }QCard_APP;
 
-typedef struct{ 
+typedef struct{
 	unsigned int Length;
 	QCard_APP *pApplications;
 }QCard_APPLIST;
@@ -282,20 +326,20 @@ typedef struct{
 
 // 服务端发送密文格式
 typedef struct{
-    unsigned char bit;
-    unsigned char x[32];
-    unsigned char y[32];
-    unsigned char Cipher[16];
-    unsigned char hash[32];
+	unsigned char bit;
+	unsigned char x[32];
+	unsigned char y[32];
+	unsigned char Cipher[16];
+	unsigned char hash[32];
 }QCard_ECCCipher;
 
 // 日志等级
 typedef enum{
-    QLOG_ERROR,
-    QLOG_WARN,
-    QLOG_INFO,
-    QLOG_DEBUG,
-    QLOG_TRACE
+	QLOG_ERROR,
+	QLOG_WARN,
+	QLOG_INFO,
+	QLOG_DEBUG,
+	QLOG_TRACE
 }QCard_LogLevel;
 
 #endif  //QCARD_TYPE_H

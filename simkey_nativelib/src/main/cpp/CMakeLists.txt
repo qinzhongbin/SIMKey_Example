@@ -31,11 +31,21 @@ set_target_properties(lib_uv PROPERTIES IMPORTED_LOCATION ${LIB_DIR}/${ANDROID_A
 add_library(lib_z SHARED IMPORTED)
 set_target_properties(lib_z PROPERTIES IMPORTED_LOCATION ${LIB_DIR}/${ANDROID_ABI}/libz.so)
 
+# event
+add_library(lib_event-2.1 SHARED IMPORTED)
+set_target_properties(lib_event-2.1 PROPERTIES IMPORTED_LOCATION ${LIB_DIR}/${ANDROID_ABI}/libevent-2.1.so)
+
+
+
+
+
+
+
 # 编译库
 add_library(native-qcard SHARED qcard.cpp)
 add_library(native-sdmp SHARED sdmp.cpp)
 add_library(cJSON SHARED cJSON.c)
 
 # 链接
-target_link_libraries(native-qcard lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log)
-target_link_libraries(native-sdmp lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log cJSON)
+target_link_libraries(native-qcard lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)
+target_link_libraries(native-sdmp lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)

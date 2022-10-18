@@ -8,13 +8,12 @@
 #ifndef QCARD_H
 #define QCARD_H
 #include "qcard_type.h"
-
 #ifdef _WIN32
 #ifndef QCARD_API
 #define QCARD_API __declspec(dllexport)
 #endif
 #else
-#define QCARD_API 
+#define QCARD_API
 #endif
 
 #ifdef __cplusplus
@@ -101,6 +100,34 @@ QCARD_API int QCard_CancelWaitForDevEvent();
 QCARD_API int QCard_GetDriverName(QHANDLE hStoreHandle, char *pcDriverName, unsigned long *pulDevNameLen);
 
 /*******************************************************************************
+* Function Name  : QCard_SetLabel
+* Description    : 设置设备标签
+* Input          : hStoreHandle : 安全存储区句柄
+*                   : label             : 设备标签，该字符串应小于32字节
+* Return         : 成功返回0,其它返回错误码
+*******************************************************************************/
+QCARD_API int QCard_SetLabel(QHANDLE hStoreHandle, char* label);
+
+/*******************************************************************************
+* Function Name  : QCard_GetDevInfo
+* Description    : 获取设备信息
+* Input          : phStoreHandle : QCard_EnumStore枚举成功后的安全存储区句柄
+* Output         : pInfo         : 设备信息
+*******************************************************************************/
+QCARD_API int QCard_GetDevInfo(QHANDLE hStoreHandle, QCard_DEVINFO *pInfo);
+
+/*******************************************************************************
+* Function Name  : QCard_GetContainerName
+* Description    : 获取容器名称
+* Input          : hStoreHandle     : 安全存储区句柄
+*                : pcSystemId       : 系统ID
+* Output         : pucAppName       : 容器所属应用名称
+*                : ContainerName    : 容器名称
+* Return         : 成功返回0; 其它值为错误码;
+*******************************************************************************/
+QCARD_API int QCard_GetContainerName(QHANDLE hStoreHandle, char *pcSystemId, char*pcAppName, char *pcContainerName);
+
+/*******************************************************************************
 * Function Name  : QCard_Login
 * Description    : 登录安全存储区
 * Input          : hStoreHandle : 安全存储区句柄
@@ -130,6 +157,17 @@ QCARD_API int QCard_Logout(QHANDLE hStoreHandle);
 * Return         : 返回值为写入密钥的长度; 其它值为错误码;
 *******************************************************************************/
 QCARD_API void QCard_SetLog(void (*cb)(int level, char * msg), int lverror, int lvwarn, int lvinfo,  int lvdebug, int lvtrace);
+
+/*******************************************************************************
+* Function Name  : QCard_GenRandom
+* Description    : 获取随机数
+* Input          : hStoreHandle     : 安全存储区句柄
+*                : pucRandom        : 缓存指针
+*                : ulRandom         : 缓存长度，随机数长度
+* Output         : pucRandom        : 随机数
+* Return         : 成功返回0,其它返回错误码
+*******************************************************************************/
+QCARD_API int QCard_GenRandom(QHANDLE hStoreHandle, unsigned char* pucRandom, unsigned long ulRandom);
 
 /*******************************************************************************
 * Function Name  : QCard_SetNetworkInform
@@ -182,7 +220,7 @@ QCARD_API int QCard_ExportCertificate(QHANDLE hStoreHandle, char *pcAppName, cha
 * Return         : 成功返回0,其它返回错误码
 *******************************************************************************/
 QCARD_API int QCard_RSASignData(QHANDLE hStoreHandle, char *pcAppName, char *pcContainerName, char *pcUserPin, unsigned long *pulUserPinRetry,
-                                       unsigned char *pucData, unsigned long ulDataLen, unsigned char *pucSignature, unsigned long *pulSignatureLen);
+								unsigned char *pucData, unsigned long ulDataLen, unsigned char *pucSignature, unsigned long *pulSignatureLen);
 
 /*******************************************************************************
 * Function Name  : QCard_SM2SignSM3Data
@@ -200,7 +238,7 @@ QCARD_API int QCard_RSASignData(QHANDLE hStoreHandle, char *pcAppName, char *pcC
 * Return         : 成功返回0,其它返回错误码
 *******************************************************************************/
 QCARD_API int QCard_SM2SignSM3Data(QHANDLE hStoreHandle, char *pcAppName, char *pcContainerName, unsigned char *pcData, unsigned long ulDataLen,
-                                      char *pcUserPin, unsigned long *ulUserPinRetry, char *pcSignature, unsigned long *pulSignatureLen);
+								   char *pcUserPin, unsigned long *ulUserPinRetry, char *pcSignature, unsigned long *pulSignatureLen);
 
 /*******************************************************************************
 * Function Name  : QCard_InitResource
@@ -238,7 +276,7 @@ QCARD_API int QCard_UpdateResource(QHANDLE hStoreHandle);
 * Return         : 成功返回0; 其它值为错误码;
 *******************************************************************************/
 QCARD_API int QCard_ReadAuthSynFlag(QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcAppName, char *pcContainerName,
-                                     char *pcPin, char *pcFlag, unsigned long *pulFlagLen);
+									char *pcPin, char *pcFlag, unsigned long *pulFlagLen);
 
 /*******************************************************************************
 * Function Name  : QCard_AuthSynFlag
@@ -252,8 +290,8 @@ QCARD_API int QCard_ReadAuthSynFlag(QHANDLE hStoreHandle, char *pcOtherStoreId, 
 * Return         : 成功返回0; 其它值为错误码;
 *******************************************************************************/
 QCARD_API int QCard_AuthSynFlag(QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcAppName, char *pcContainerName,
-                                     char *pcPin, char *pcFlag);
-                                    
+								char *pcPin, char *pcFlag);
+
 /*******************************************************************************
 * Function Name  : QCard_AuthSynFlagKeyInit
 * Description    : 获取密钥句柄, 通过认证同步码获取。（CTC模式）
@@ -269,8 +307,8 @@ QCARD_API int QCard_AuthSynFlag(QHANDLE hStoreHandle, char *pcOtherStoreId, char
 * Output         : phKeyHandle   : 密钥句柄
 * Return         : 成功返回0; 其它值为错误码;
 *****************************************************/
-QCARD_API int QCard_AuthSynFlagKeyInit (QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcFlag, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, 
-                                    char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
+QCARD_API int QCard_AuthSynFlagKeyInit (QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcFlag, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam,
+										char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
 
 /*******************************************************************************
 * Function Name  : QCard_GetAuthSynBlockKey
@@ -286,8 +324,8 @@ QCARD_API int QCard_AuthSynFlagKeyInit (QHANDLE hStoreHandle, char *pcOtherStore
 *                : puikeyLen        : 密钥块大小
 * Return         : 成功返回0; 其它值为错误码;
 *****************************************************/
-QCARD_API int QCard_GetAuthSynBlockKey(QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcFlag, 
-    char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, unsigned char **pucBlockKey, unsigned int *puikeyLen);
+QCARD_API int QCard_GetAuthSynBlockKey(QHANDLE hStoreHandle, char *pcOtherStoreId, char *pcFlag,
+									   char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, unsigned char **pucBlockKey, unsigned int *puikeyLen);
 
 /*******************************************************************************
 * Function Name  : QCard_GetClientBlockKey
@@ -302,8 +340,8 @@ QCARD_API int QCard_GetAuthSynBlockKey(QHANDLE hStoreHandle, char *pcOtherStoreI
 * Output         : phKeyHandle   : 密钥句柄
 * Return         : 成功返回0; 其它值为错误码;
 *****************************************************/
-QCARD_API int QCard_GetClientBlockKey(QHANDLE hStoreHandle, char *pcCheckCode, char *pcFlag, 
-    char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, unsigned char **pucBlockKey, unsigned int *puikeyLen);
+QCARD_API int QCard_GetClientBlockKey(QHANDLE hStoreHandle, char *pcCheckCode, char *pcFlag,
+									  char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, unsigned char **pucBlockKey, unsigned int *puikeyLen);
 
 
 /*******************************************************************************
@@ -321,8 +359,8 @@ QCARD_API int QCard_GetClientBlockKey(QHANDLE hStoreHandle, char *pcCheckCode, c
 * Output         : phKeyHandle   : 密钥句柄
 * Return         : 成功返回0; 其它值为错误码;
 *****************************************************/
-QCARD_API int QCard_ClientKeyInit (QHANDLE hStoreHandle, char *pcCheckCode, char *pcFlag, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, 
-                                    char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
+QCARD_API int QCard_ClientKeyInit (QHANDLE hStoreHandle, char *pcCheckCode, char *pcFlag, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam,
+								   char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
 
 /*******************************************************************************
 * Function Name  : QCard_LocalKeyInit
@@ -338,7 +376,7 @@ QCARD_API int QCard_ClientKeyInit (QHANDLE hStoreHandle, char *pcCheckCode, char
 * Return         : 成功返回0; 其它值为错误码;
 *******************************************************************************/
 QCARD_API int QCard_LocalKeyInit (QHANDLE hStoreHandle, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam,
-                                 char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
+								  char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
 
 /*******************************************************************************
 * Function Name  : QCard_ConsultKeyInit
@@ -355,8 +393,8 @@ QCARD_API int QCard_LocalKeyInit (QHANDLE hStoreHandle, unsigned long ulAlgId, Q
 * Output         : phKeyHandle   : 密钥句柄
 * Return         : 成功返回0; 其它值为错误码;
 *****************************************************/
-QCARD_API int QCard_ConsultKeyInit(QHANDLE hStoreHandle, unsigned char *pucWrapedData, unsigned long ulWrapedDataLen, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, 
-                                    char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
+QCARD_API int QCard_ConsultKeyInit(QHANDLE hStoreHandle, unsigned char *pucWrapedData, unsigned long ulWrapedDataLen, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam,
+								   char *pcAppName, char *pcContainerName, char *pcPin, unsigned long ulSafeTactics, KEYHANDLE *phKeyHandle);
 
 /*******************************************************************************
 * Function Name  : QCard_ExternalKeyInit
@@ -370,6 +408,38 @@ QCARD_API int QCard_ConsultKeyInit(QHANDLE hStoreHandle, unsigned char *pucWrape
 * Return         : 成功返回0; 其它值为错误码;
 *******************************************************************************/
 QCARD_API int QCard_ExternalKeyInit(QHANDLE hStoreHandle, unsigned char *pucKey, unsigned long ulKeyLen, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, KEYHANDLE *phKeyHandle);
+
+/*******************************************************************************
+* Function Name  : QCard_EncKeyInit
+* Description    : 获取密钥句柄（加密公钥加密的密文密钥）
+* Input          : hStoreHandle  : 安全存储区句柄
+*                : pcAppName       : 应用名称
+*                : pcConName       : 容器名称
+*                : pcPin                 : 应用PIN码
+*                : ulTypeCon[in]    :容器类型 1-RSA 2-ECC
+*                : pucKey        : 会话密钥
+*                : ulKeyLen      : 会话密钥长度
+*                : ulAlgId       : 算法标示
+*                : KeyParam      : 分组密钥算法相关参数
+* Output         : phKeyHandle   : 密钥句柄
+* Return         : 成功返回0; 其它值为错误码;
+*******************************************************************************/
+QCARD_API int QCard_EncKeyInit(QHANDLE hStoreHandle, char *pcAppName, char *pcConName, char *pcPin, unsigned long ulTypeCon,
+							   unsigned char *pucKey, unsigned long ulKeyLen, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, KEYHANDLE *phKeyHandle);
+
+/*******************************************************************************
+* Function: QCard_MacVerifyUseEnvelopedKey
+* Description:MAC校验（使用安全通道hmac密钥）
+* Return: QCARD_API int 0-成功 非0-失败
+* Param:
+* @ hStoreHandle[in]:设备句柄
+* @ pcAppName[in]:应用名
+* @ pcConName[in]:容器名
+* @ pcPin[in]:应用pin码
+* @ pcMessage[in]:消息
+* @ pcMacForVerify[in]:消息验证码（base64编码，待比对）
+*******************************************************************************/
+QCARD_API int QCard_MacVerifyUseEnvelopedKey(QHANDLE hStoreHandle,  char *pcAppName, char *pcConName, char *pcPin, char *pcMessage, char *pcMacForVerify);
 
 /*******************************************************************************
 * Function Name  : QCard_KeyFinal
@@ -481,8 +551,8 @@ QCARD_API int QCard_RequestCTSKey(char *pcAddr, char *pcStoreId, char *pcSystemI
 *                : pcFlag       : 协商数据
 *                : pcCheckCode  : 协商数据校验码
 *******************************************************************************/
-QCARD_API int QCard_RequestCTSKeyByApp(char *pcAddr, char *pcStoreId, char *pcAppName, char *pcConName, unsigned long ulSoftKeyLen, 
-                        unsigned char *pucKey, unsigned char *pucSoftKey, char **pcFlag, char *pcCheckCode);
+QCARD_API int QCard_RequestCTSKeyByApp(char *pcAddr, char *pcStoreId, char *pcAppName, char *pcConName, unsigned long ulSoftKeyLen,
+									   unsigned char *pucKey, unsigned char *pucSoftKey, char **pcFlag, char *pcCheckCode);
 
 /*******************************************************************************
 * Function Name  : QCard_CreateOnlineBizKey
@@ -497,8 +567,8 @@ QCARD_API int QCard_RequestCTSKeyByApp(char *pcAddr, char *pcStoreId, char *pcAp
 * OutPut  : secretId       : 密钥ID
 *******************************************************************************/
 QCARD_API int QCard_CreateOnlineBizKey(char *pcAddr, int secretSize, char *validityDate,
-    char *systemId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
-    char *secretId);
+									   char *systemId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
+									   char *secretId);
 
 /*******************************************************************************
 * Function Name  : QCard_ServerRequestOnlineBizKey
@@ -513,8 +583,8 @@ QCARD_API int QCard_CreateOnlineBizKey(char *pcAddr, int secretSize, char *valid
 *                : secretKeyLen  : 业务密钥长度(字节)
 *******************************************************************************/
 QCARD_API int QCard_ServerRequestOnlineBizKey(char *pcAddr, char *systemId,
-    char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
-    unsigned char **secretKey, unsigned long *secretKeyLen);
+											  char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
+											  unsigned char **secretKey, unsigned long *secretKeyLen);
 
 /*******************************************************************************
 * Function Name  : QCard_ClientRequestOnlineBizKey
@@ -530,8 +600,8 @@ QCARD_API int QCard_ServerRequestOnlineBizKey(char *pcAddr, char *systemId,
 *                : pcCheckCode  : 协商数据校验码
 *******************************************************************************/
 QCARD_API int QCard_ClientRequestOnlineBizKey(char *pcAddr, char *pcStoreId, char *systemId,
-    char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
-    char **pcFlag, char *pcCheckCode);
+											  char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey,
+											  char **pcFlag, char *pcCheckCode);
 
 /*******************************************************************************
 * Function Name  : QCard_cleanNegotiateOnlineBizKey
@@ -542,16 +612,16 @@ QCARD_API int QCard_ClientRequestOnlineBizKey(char *pcAddr, char *pcStoreId, cha
 *                : serverId    : 服务端鉴权ID
 *                : visitKeyBase64    : 访问密钥（加密后做base64编码）
 *                : protectKey    : 保护密钥
-* OutPut  : 
+* OutPut  :
 *******************************************************************************/
 QCARD_API int QCard_cleanNegotiateOnlineBizKey(char *pcAddr, char *systemId,
-    char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey);
+											   char *secretId, char *serverId, char *visitKeyBase64, const unsigned char *protectKey);
 
 /*******************************************************************************
 * Function Name  : QCard_RequestCTSKeyByAppSetTimeOut
 * Description    : 设置超时时间
 * Input          :  TimeOut      : 接口超时时间
-* OutPut         ; 
+* OutPut         ;
 *******************************************************************************/
 QCARD_API int QCard_RequestCTSKeyByAppSetTimeOut(unsigned long TimeOut);
 
@@ -585,7 +655,7 @@ QCARD_API int QCard_QueryLargeKey(QHANDLE hStoreHandle, char *pcStoreId, char *p
 * Function Name  : QCard_GetNegotiateMode
 * Description    : 获取协商模式
 * Input          : hStoreHandle     : 安全存储区句柄
-*                : pcSystemId       : 系统名称  
+*                : pcSystemId       : 系统名称
 * Output         : puiNegotiateMode : 输出值为0时,代表目标协商模式未确定
 *                :                   :输出值为2时,代表目标协商模式为CTS模式（点对服务器）;
 *                :                   :输出值为1时,代表目标协商模式为CTC模式 (点对点);
@@ -642,7 +712,7 @@ QCARD_API int QCard_WriteAudit(QHANDLE hStoreHandle, char *pcAppName, char *pcCo
 * Return         : 成功返回0,其它返回错误码
 *******************************************************************************/
 QCARD_API int QCard_VerifyFingerPrint(QHANDLE hStoreHandle, char *pcAppName, char *pcContainerName,
-															char *pcUserPin, int *piVerifyResult);
+									  char *pcUserPin, int *piVerifyResult);
 
 /*******************************************************************************
 * Function Name  : QCard_VerifyAppPIN
@@ -666,7 +736,7 @@ QCARD_API int QCard_VerifyAppPIN(QHANDLE hStoreHandle, char *pcAppName, char *pc
 * Return         : 成功返回0,其它返回错误码
 *******************************************************************************/
 QCARD_API int QCard_ChangeAppUserPin(QHANDLE hStoreHandle, char *pcAppName,
-																char *pcOldPin, char *pcNewPin, unsigned long *pulPinRetry);
+									 char *pcOldPin, char *pcNewPin, unsigned long *pulPinRetry);
 
 /*******************************************************************************
 * Function Name  : QCard_DefaultPasswdFlag
@@ -751,7 +821,7 @@ QCARD_API void QCard_SetProxyServerAddress(unsigned int uiSetProxy, const char *
 * Description    : 设置本地网络监听的ip 端口
 * Input          : localip    : 本地的ip
 *                : localport    :本地的端口
-*                : storgedevice : 0：无存储设备        1：有存储设备 
+*                : storgedevice : 0：无存储设备        1：有存储设备
 * Return         : 成功返回0,其它返回错误码
 *******************************************************************************/
 int QCard_SetLocalNetListenPar(char* localip,unsigned int localport,int storgedevice);
@@ -763,7 +833,7 @@ int QCard_SetLocalNetListenPar(char* localip,unsigned int localport,int storgede
 *                : remoteport  :对端的端口
 *                : negotiatemode:协商的模式
                  ：appnem       : 应用名
-                 : conname.....: 容器名 
+                 : conname.....: 容器名
 * Output         ：poolid       :秘钥池ID
 * Return         : 成功返回0
 *******************************************************************************/
@@ -807,91 +877,220 @@ int QCard_GetKeyFromKeyPool(char* poolid,unsigned char* key,char* sequence);
 int QCard_GetSquenceKeyFromKeyPool(char* poolid,unsigned char* key,char* sequence);
 
 /*******************************************************************************
-* Function Name  : QCard_GetQccsId
-* Description    : 获取云控ID
-* Input           : hStoreHandle        : 安全存储区句柄
-*                    : pcAppName         : 应用名
-*                    : pcContainerName : 容器名
-* Output         : pcQccsId              : 云控ID
-*                    : pcAddr                 : 服务端地址
-* Return         : 成功返回0,其它返回错误码
+* Function: QCard_SetServerAuthorizeKey
+* Description:设置服务端认证密码
+* Return: int 0-成功 非0-失败
+* Param:
+* @ visitKeyBase64[in]:
+* @ protectKey[in]:
 *******************************************************************************/
-QCARD_API int QCard_GetQccsId(QHANDLE hStoreHandle, char *pcAppName, char *pcContainerName, char *pcQccsId, char *pcAddr);
+QCARD_API int QCard_SetServerAuthorizeKey(const char* visitKeyBase64, const char* protectKey);
 
 /*******************************************************************************
-* Function Name  : QCard_GetAgreementQKeyParams
-* Description    : 获取在线密钥协商参数
-* Input          : hStoreHandle        : 安全存储区句柄
-*                  : pcAddr                  : 服务端地址
-*                  : pcPeerDeviceId       : 对端设备序列号
-*                  : pcPeerQccsId          : 对端云控ID
-*                 : pcAppName         : 应用名称
-*                 : pcContainerName  : 容器名称
-*                 : pcPin                    : 用户PIN
-* Output       : pcAgreementBiz      : 协商业务ID
-*                 : phKeyParamHandle  : 在线协商参数句柄
-* Return        : 成功返回0,其它返回错误码
+* Function: QCard_SetAuthorizeKey
+* Description:设置认证密钥（此接口与QCard_SetServerAuthorizeKey二选一）
+* Return: void
+* Param:
+* @ iKeyType[in]:密钥类型
+* @ pucKeybuf[in]:密钥内容，默认二进制
+* @ uiKeyLen[in]:密钥长度
+* @ pArg[in]:预留参数
 *******************************************************************************/
-QCARD_API int QCard_GetAgreementQKeyParams(QHANDLE hStoreHandle, char *pcAddr,
-	char *pcPeerDeviceId, char *pcPeerQccsId, char *pcAppName, char *pcContainerName, char * pcPin,
-	char *pcAgreementBiz, KEYPARAMHANDLE *phKeyParamHandle);
+QCARD_API void QCard_SetAuthorizeKey(int iKeyType, unsigned char *pucKeybuf, unsigned int uiKeyLen, void *pArg);
 
 /*******************************************************************************
-* Function Name  : QCard_CreateAgreementQKey
-* Description    : 创建在线密钥
-* Input        : hStoreHandle            : 安全存储区句柄
-*                 : pcAddr                     : 服务端地址
-*                 : pcAgreementBiz        : 协商业务ID
-*                 : ulSoftKeyLen             : 协商密钥（软密钥）长度
-*                  : ulAlgId                     : 算法标识
-*                  : KeyParam                 : 分组密钥算法相关参数
-*                  : pcAppName             : 应用名称
-*                  : pcContainerName     : 容器名称
-*                  : pcPin                        : 用户PIN
-* Output       : hmac                                       : 消息鉴别码
-*                  : phKeyParamHandle                  : 在线协商参数句柄
-*                  : phAgreementKeyHandle            : 在线协商密钥句柄
-* Return         : 成功返回0,其它返回错误码
+* Function: QCard_CreateSecTunnel
+* Description:创建安全通道
+* Return: int 0-成功 非0-失败
+* Param:
+* @ iAppType[in]:应用类型（用于区分通信协议）
+* @ pcAddr[in]:云控地址,ip:port格式
+* @ pcPid[in]:对端密钥应用系统ID
+* @ pcSrvId[in]:云控ID
+* @ pcArg[in]:预留参数
+* @ phSecTunnelHandle[out]:安全通道句柄
 *******************************************************************************/
-QCARD_API int QCard_CreateAgreementQKey(QHANDLE hStoreHandle, char *pcAddr, char *pcAgreementBiz, unsigned long ulSoftKeyLen, 
-	unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, char *pcAppName, char *pcContainerName, char *pcPin,
-	char *hmac, KEYPARAMHANDLE *phKeyParamHandle, KEYHANDLE *phAgreementKeyHandle);
+QCARD_API int QCard_CreateSecTunnel(int iAppType, char *pcAddr, char *pcPid, char *pcSrvId,
+									void *pcArg, void **phSecTunnelHandle);
 
 /*******************************************************************************
-* Function Name  : QCard_ReadAgreementQKey
-* Description    : 读取在线密钥
-* Input          : hStoreHandle        : 安全存储区句柄
-*                  : peerHmac                : 对端消息鉴别码
-*                  : ulAlgId                     : 算法标识
-*                  : KeyParam                 : 分组密钥算法相关参数
-*                  : hKeyParamHandle     : 在线协商参数句柄
-* Output       : hmac                                       : 消息鉴别码
-*                  : phAgreementKeyHandle            : 在线协商密钥句柄
-* Return         : 成功返回0,其它返回错误码
+* Function: QCard_DestroySecTunnel
+* Description:销毁安全通道句柄
+* Return: void
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
 *******************************************************************************/
-QCARD_API int QCard_ReadAgreementQKey(QHANDLE hStoreHandle, char *peerHmac,
-	unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, KEYPARAMHANDLE hKeyParamHandle,
-	char *hmac, KEYHANDLE *phAgreementKeyHandle);
+QCARD_API void QCard_DestroySecTunnel(void *hSecTunnelHandle);
 
 /*******************************************************************************
-* Function Name  : QCard_VerifyAgreementQKey
-* Description  : 验证在线密钥
-* Input           : hStoreHandle        : 安全存储区句柄
-*                    : hKeyParamHandle     : 在线协商参数句柄
-*                    : peerHmac                : 对端消息鉴别码
-* Output         : piVerifyResult           : 验证结果 0-验证不通过 1-验证通过
-* Return         : 成功返回0,其它返回错误码
+* Function: QCard_GetLinkId
+* Description:获取链路ID
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcPid[in]:对端密钥应用系统ID
+* @ pcPsrvId[in]:对端云控ID
+* @ pcLinkId[out]:链路ID
 *******************************************************************************/
-QCARD_API int QCard_VerifyAgreementQKey(QHANDLE hStoreHandle, KEYPARAMHANDLE hKeyParamHandle, char *peerHmac, int *piVerifyResult);
+QCARD_API int QCard_GetLinkId(void *hSecTunnelHandle, char *pcPid, char *pcPsrvId, char *pcLinkId);
 
 /*******************************************************************************
-* Function Name  : QCard_DestroyKeyParamHandle
-* Description  : 销毁在线协商参数句柄
-* Input           : hStoreHandle           : 安全存储区句柄
-*                   : hKeyParamHandle     : 在线协商参数句柄
-* Return         : void
+* Function: QCard_RequestQKey
+* Description:请求协商量子密钥（软密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcPid[in]:对端密钥应用系统ID
+* @ pcLinkId[in]:链路ID
+* @ uiKeyLen[in]:请求的密钥长度（单位为字节）
+* @ pcKeyId[out]:量子密钥ID
+* @ pucQkey[out]:量子密钥
+* @ puiKeyLen[in|out]:量子密钥长度（单位为字节） 输入时表示密钥数据缓冲区长度，输出时表示密钥的实际长度
 *******************************************************************************/
-QCARD_API void QCard_DestroyKeyParamHandle(QHANDLE hStoreHandle, KEYPARAMHANDLE hKeyParamHandle);
+QCARD_API int QCard_RequestQKey(void *hSecTunnelHandle, char *pcPid, char *pcLinkId, unsigned int uiKeyLen,
+								char *pcKeyId, unsigned char *pucQkey, unsigned int *puiKeyLen);
+
+/*******************************************************************************
+* Function: QCard_ReadQKey
+* Description:读取量子密钥（软密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcKeyId[in]:量子密钥ID
+* @ pucQkey[out]:量子密钥
+* @ puiKeyLen[in|out]:量子密钥长度 输入时表示密钥数据缓冲区长度，输出时表示密钥的实际长度
+*******************************************************************************/
+QCARD_API int QCard_ReadQKey(void* hSecTunnelHandle, char *pcKeyId, unsigned char* pucQkey, unsigned int* puiKeyLen);
+
+/*******************************************************************************
+* Function: QCard_RequestDeviceQKey
+* Description:请求协商量子密钥（硬密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcPid[in]:对端密钥应用系统ID
+* @ pcLinkId[in]:链路ID
+* @ uiKeyLen[in]:请求的密钥长度（单位为字节）
+* @ pcKeyId[out]:量子密钥ID
+* @ pDevQkeyParam[out]:硬密钥参数
+* @ puiKeyNum[out]:量子密钥个数（每16个字节为一个密钥）
+*******************************************************************************/
+QCARD_API int QCard_RequestDeviceQKey(void *hSecTunnelHandle, char *pcPid, char *pcLinkId, unsigned int uiKeyLen,
+									  char *pcKeyId, DEVQKEYPARAM* pDevQkeyParam, unsigned int* puiKeyNum);
+
+/*******************************************************************************
+* Function: QCard_ReadDeviceQKey
+* Description:读取量子密钥（硬密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcKeyId[in]:量子密钥ID
+* @ pDevQkeyParam[out]:硬密钥参数
+* @ puiKeyNum[out]:量子密钥个数（每16个字节为一个密钥）
+*******************************************************************************/
+QCARD_API int QCard_ReadDeviceQKey(void *hSecTunnelHandle, char *pcKeyId, DEVQKEYPARAM* pDevQkeyParam,
+								   unsigned int* puiKeyNum);
+
+/*******************************************************************************
+* Function: QCard_deviceQKeyHandlesInit
+* Description:获取多个硬密钥句柄
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hStoreHandle[in]:安全存储区句柄
+* @ devQkeyParam[in]:硬密钥参数
+* @ uiStartIndex[in]:开始index（index从0开始）
+* @ uiKeyHandleNum[in]:密钥句柄个数
+* @ ulAlgId[in]:算法标识
+* @ KeyParam[in]:分组密钥算法相关参数
+* @ pKeyHandles[out]:硬密钥句柄数组
+*******************************************************************************/
+QCARD_API int QCard_deviceQKeyHandlesInit(QHANDLE hStoreHandle, DEVQKEYPARAM devQkeyParam, unsigned int uiStartIndex,
+										  unsigned int uiKeyHandleNum, unsigned long ulAlgId, QCard_BLOCKCIPHERPARAM KeyParam, KEYHANDLE* pKeyHandles);
+
+/*******************************************************************************
+* Function: QCard_DestroyDeviceKeyHandles
+* Description:销毁多个硬密钥句柄
+* Return: void
+* Param:
+* @ hStoreHandle[in]:安全存储区句柄
+* @ pKeyHandles[in]:硬密钥句柄数组
+* @ uiKeyHandleNum[in]:密钥句柄个数
+*******************************************************************************/
+QCARD_API void QCard_DestroyDeviceKeyHandles(QHANDLE hStoreHandle, KEYHANDLE* pKeyHandles, unsigned int uiKeyHandleNum);
+
+/*******************************************************************************
+* Function: QCard_DestroyDevQkeyParam
+* Description:销毁硬密钥参数
+* Return: void
+* Param:
+* @ devQkeyParam[in]:硬密钥参数
+*******************************************************************************/
+QCARD_API void QCard_DestroyDevQkeyParam(DEVQKEYPARAM devQkeyParam);
+
+/*******************************************************************************
+* Function: QCard_ServerProxyRequestQkey
+* Description:服务端代理请求协商量子密钥
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hSecTunnelHandle[in]:安全通道句柄
+* @ pcClientId[in]:委托方ID
+* @ pcLinkId[in]:链路ID
+* @ pcSystemId[in]:系统ID
+* @ uiKeyLen[in]:请求的密钥长度（单位为字节）
+* @ pcKeyId[out]:量子密钥ID
+* @ pucFlagChkV[out]:鉴别信息
+* @ pcFlag[out]:密钥协商flag
+* @ piEncKey[out]:密钥加密类型 0公钥加密 1未加密 2对称密钥加密
+* @ pucCiphreQKey[out]:密文密钥
+* @ puiCiphreQKeyLen[in|out]:密文密钥长度（单位为字节）  输入时表示密钥数据缓冲区长度，输出时表示密钥的实际长度
+*******************************************************************************/
+QCARD_API int QCard_ServerProxyRequestQkey(void *hSecTunnelHandle, char *pcClientId, char *pcLinkId, char* pcSystemId, unsigned int uiKeyLen,
+										   char pcKeyId[64], unsigned char pucFlagChkV[16], char* pcFlag, int* piEncKey,
+										   unsigned char* pucCiphreQKey, unsigned int* puiCiphreQKeyLen);
+
+/*******************************************************************************
+* Function: QCard_ClientGetQkey
+* Description:客户端获取量子密钥（软密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hStoreHandle[in]:安全存储区句柄
+* @ pcQccsId[in]:云控ID
+* @ pcSystemId[in]:系统ID
+* @ pcPin[in]:系统PIN码
+* @ pucFlagChkV[in]:鉴别信息
+* @ pcFlag[in]:密钥协商flag
+* @ iEncKey[in]:密钥加密类型 0公钥加密 1未加密 2对称密钥加密
+* @ pucCiphreQKey[in]:密文密钥
+* @ uiCiphreQKeyLen[in]:密文密钥长度（单位为字节）
+* @ pucQkey[out]:量子密钥
+* @ puiKeyLen[out]:量子密钥长度（单位为字节）  输入时表示密钥数据缓冲区长度，输出时表示密钥的实际长度
+*******************************************************************************/
+QCARD_API int QCard_ClientGetQkey(QHANDLE hStoreHandle, char* pcQccsId, char* pcSystemId, char* pcPin, unsigned char pucFlagChkV[16], char* pcFlag,
+								  int iEncKey, unsigned char* pucCiphreQKey, unsigned int uiCiphreQKeyLen,
+								  unsigned char* pucQkey, unsigned int* puiKeyLen);
+
+/*******************************************************************************
+* Function: QCard_ClientGetDeviceQkey
+* Description:客户端获取量子密钥（硬密钥）
+* Return: int 0-成功 非0-失败
+* Param:
+* @ hStoreHandle[in]:安全存储区句柄
+* @ pcQccsId[in]:云控ID
+* @ pcSystemId[in]:系统ID
+* @ pcPin[in]:系统PIN码
+* @ pucFlagChkV[in]:鉴别信息
+* @ pcFlag[in]:密钥协商flag
+* @ iEncKey[in]:密钥加密类型 0公钥加密 1未加密 2对称密钥加密
+* @ pucCiphreQKey[in]:密文密钥
+* @ uiCiphreQKeyLen[in]:密文密钥长度
+* @ uiPlainKeyLen[in]:明文密钥长度（单位为字节）
+* @ pDevQkeyParam[out]:硬密钥参数
+* @ puiKeyNum[out]:量子密钥个数（每16个字节为一个密钥）
+*******************************************************************************/
+QCARD_API int QCard_ClientGetDeviceQkey(QHANDLE hStoreHandle, char* pcQccsId, char* pcSystemId, char* pcPin, unsigned char pucFlagChkV[16], char* pcFlag,
+										int iEncKey, unsigned char* pucCiphreQKey, unsigned int uiCiphreQKeyLen, unsigned int uiPlainKeyLen,
+										DEVQKEYPARAM* pDevQkeyParam, unsigned int* puiKeyNum);
+
 
 QCARD_API int QCard_ResetDefaultApp(QHANDLE qHandle);
 

@@ -16,7 +16,7 @@ public class QCard {
         System.loadLibrary("native-qcard");
     }
 
-//    public native void setLogCallBack();
+    public native void setLogCallBack();
 
     /**
      * 设置文件路径
@@ -89,6 +89,7 @@ public class QCard {
 
     /**
      * 删除应用
+     *
      * @param appName 应用名称
      */
     public native boolean deleteApp(String appName);
@@ -120,6 +121,7 @@ public class QCard {
 
     /**
      * 清理密钥
+     *
      * @param appName 应用名称
      * @return 是否清理成功
      */
@@ -140,6 +142,12 @@ public class QCard {
     public native NegotiateInfo negoOLBizKey(String host, String deviceId, String systemId, String secretId, String serverId, String visitKeyBase64, String protectKey);
 
     /**
+     * 服务端协商在线密钥
+     * @return 协商参数 (json格式)
+     */
+    public native String negoOLKey();
+
+    /**
      * 获取密钥句柄
      *
      * @param appName   应用名称
@@ -152,11 +160,51 @@ public class QCard {
     public native long getKeyHandle(String appName, String conName, String userPIN, String checkCode, String flag);
 
     /**
+     * 客户端 获取在线协商密钥句柄
+     * @param qccsId
+     * @param sysId
+     * @param appName
+     * @param conName
+     * @param flagChkV
+     * @param flag
+     * @param offerSoftKey
+     * @param cipherQKey
+     * @param cipherQKeyLen
+     * @param pin
+     * @return 密钥句柄
+     */
+    public native long getOLKeyHandle(String qccsId, String sysId, String appName, String conName, byte[] flagChkV, String flag, int offerSoftKey, byte[] cipherQKey, int cipherQKeyLen, String pin);
+
+
+    /**
      * 释放密钥句柄
      *
      * @param keyHandle 密钥句柄
      */
     public native void freeKeyHandle(long keyHandle);
+
+    /**
+     * 获取软密钥
+     *
+     * @param keyHandle 密钥句柄
+     * @param keyLen    密钥长度
+     * @return 软密钥
+     */
+    public native byte[] getSoftKey(long keyHandle, long keyLen);
+
+    /**
+     * 客户端 获取在线协商软密钥
+     * @param qccsId
+     * @param sysId
+     * @param flagChkV
+     * @param flag
+     * @param offerSoftKey
+     * @param cipherQKey
+     * @param cipherQKeyLen
+     * @param pin
+     * @return 软密钥
+     */
+    public native byte[] getOLSoftKey(String qccsId, String sysId, byte[] flagChkV, String flag, int offerSoftKey, byte[] cipherQKey, int cipherQKeyLen, String pin);
 
     /**
      * 加密
@@ -175,15 +223,6 @@ public class QCard {
      * @return 明文
      */
     public native byte[] decrypt(long keyHandle, byte[] cipher);
-
-    /**
-     * 获取软密钥
-     *
-     * @param keyHandle 密钥句柄
-     * @param keyLen    密钥长度
-     * @return 软密钥
-     */
-    public native byte[] getSoftKey(long keyHandle, long keyLen);
 
     /**
      * 导出证书
@@ -213,4 +252,8 @@ public class QCard {
      * @return 是否验证成功
      */
     public native boolean verifyAppPIN(String appName, String PIN);
+
+
+    public native void test();
+
 }

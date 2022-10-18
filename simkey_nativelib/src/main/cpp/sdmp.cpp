@@ -317,7 +317,7 @@ Java_com_qasky_simkey_1nativelib_sdmp_SDMP_test(JNIEnv *env, jobject thiz) {
 
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "http://www.baidu.com/");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://www.baidu.com/");
 
 #ifdef SKIP_PEER_VERIFICATION
         /*

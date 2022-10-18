@@ -464,8 +464,14 @@ public class MainActivity extends AppCompatActivity {
         byte[] flagChkV = ConvertUtils.hexString2Bytes(hexFlagChkV);
         byte[] cipherQKey = ConvertUtils.hexString2Bytes(hexCipherQKey);
 
-        keyHandle = qCard.getOLKeyHandle(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), onLineNegoInfo.getAppName(), onLineNegoInfo.getConName(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
-        ToastUtils.showLong("在线协商密钥句柄: 0x" + Long.toHexString(keyHandle));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                keyHandle = qCard.getOLKeyHandle(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), onLineNegoInfo.getAppName(), onLineNegoInfo.getConName(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
+                ToastUtils.showLong("在线协商密钥句柄: 0x" + Long.toHexString(keyHandle));
+            }
+        }).start();
+
     }
 
     public void freeKeyHandle(View view) {
@@ -484,8 +490,13 @@ public class MainActivity extends AppCompatActivity {
         byte[] flagChkV = ConvertUtils.hexString2Bytes(hexFlagChkV);
         byte[] cipherQKey = ConvertUtils.hexString2Bytes(hexCipherQKey);
 
-        byte[] softKey = qCard.getOLSoftKey(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
-        ToastUtils.showLong(ConvertUtils.bytes2HexString(softKey));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] softKey = qCard.getOLSoftKey(onLineNegoInfo.getQccsId(), onLineNegoInfo.getSysId(), flagChkV, onLineNegoInfo.getFlag(), onLineNegoInfo.getOfferSoftKey(), cipherQKey, onLineNegoInfo.getCipherQKeyLen(), userPIN);
+                ToastUtils.showLong(ConvertUtils.bytes2HexString(softKey));
+            }
+        }).start();
     }
 
     byte[] cipher;
@@ -528,15 +539,5 @@ public class MainActivity extends AppCompatActivity {
     public void verifyAppPIN(View view) {
         boolean success = qCard.verifyAppPIN(appName, userPIN);
         ToastUtils.showLong("验证应用PIN: " + (success ? "成功" : "失败"));
-    }
-
-    public void test(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                qCard.negoOLKey2();
-            }
-        }).start();
     }
 }

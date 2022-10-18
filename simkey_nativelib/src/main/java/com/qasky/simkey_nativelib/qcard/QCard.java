@@ -161,16 +161,16 @@ public class QCard {
 
     /**
      * 客户端 获取在线协商密钥句柄
-     * @param qccsId
-     * @param sysId
-     * @param appName
-     * @param conName
-     * @param flagChkV
-     * @param flag
-     * @param offerSoftKey
-     * @param cipherQKey
-     * @param cipherQKeyLen
-     * @param pin
+     * @param qccsId        云控id
+     * @param sysId         应用系统id
+     * @param appName       应用名称
+     * @param conName       容器名称
+     * @param flagChkV      鉴别信息
+     * @param flag          密钥协商flag
+     * @param offerSoftKey  是否提供软密钥
+     * @param cipherQKey    密文软密钥
+     * @param cipherQKeyLen 密文软密钥长度
+     * @param pin           用户PIN
      * @return 密钥句柄
      */
     public native long getOLKeyHandle(String qccsId, String sysId, String appName, String conName, byte[] flagChkV, String flag, int offerSoftKey, byte[] cipherQKey, int cipherQKeyLen, String pin);
@@ -194,14 +194,14 @@ public class QCard {
 
     /**
      * 客户端 获取在线协商软密钥
-     * @param qccsId
-     * @param sysId
-     * @param flagChkV
-     * @param flag
-     * @param offerSoftKey
-     * @param cipherQKey
-     * @param cipherQKeyLen
-     * @param pin
+     * @param qccsId        云控id
+     * @param sysId         应用系统id
+     * @param flagChkV      鉴别信息
+     * @param flag          密钥协商flag
+     * @param offerSoftKey  是否提供软密钥
+     * @param cipherQKey    密文软密钥
+     * @param cipherQKeyLen 密文软密钥长度
+     * @param pin           用户PIN
      * @return 软密钥
      */
     public native byte[] getOLSoftKey(String qccsId, String sysId, byte[] flagChkV, String flag, int offerSoftKey, byte[] cipherQKey, int cipherQKeyLen, String pin);

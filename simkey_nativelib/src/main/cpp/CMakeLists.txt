@@ -47,5 +47,5 @@ add_library(native-sdmp SHARED sdmp.cpp)
 add_library(cJSON SHARED cJSON.c)
 
 # 链接
-target_link_libraries(native-qcard lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)
-target_link_libraries(native-sdmp lib_crypto lib_curl lib_sdmp lib_simkey lib_ssl lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)
+target_link_libraries(native-qcard lib_crypto lib_curl lib_sdmp lib_simkey lib_gmp lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)
+target_link_libraries(native-sdmp lib_crypto lib_curl lib_sdmp lib_simkey lib_gmp lib_tysimkeylib lib_uv lib_z log cJSON lib_event-2.1)

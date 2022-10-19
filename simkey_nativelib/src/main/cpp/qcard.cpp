@@ -282,17 +282,17 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLKey(JNIEnv *env, jobject thiz
     LOGD("QCard_GetSysTemId ret = 0x%08x systemId = %s", ret, systemId);
 
 
-    // step 1 : 设置服务端认证密码
+    // 设置服务端认证密码
     ret = QCard_SetServerAuthorizeKey(visitKeyBase64, protectKey);
     LOGD("QCard_SetServerAuthorizeKey ret = 0x%08x", ret);
-    // step 2 : 创建安全通道
+    // 创建安全通道
     ret = QCard_CreateSecTunnel(PROTOCOL_TYPE_TCP, ipPort, qccsId, id, nullptr, &secTunnelHandle);
     LOGD("QCard_CreateSecTunnel ret = 0x%08x", ret);
-    // step 3 : 获取链路ID
+    // 获取链路ID
     ret = QCard_GetLinkId(secTunnelHandle, devId, qccsId, linkId);
     LOGD("QCard_GetLinkId ret = 0x%08x", ret);
     LOGD("QCard_GetLinkId linkId = %s", linkId);
-    // step 4 : 代理请求协商量子密钥
+    // 代理请求协商量子密钥
     ret = QCard_ServerProxyRequestQkey(secTunnelHandle, devId, linkId, systemId, keyLen, keyId, flagChkV, flag, &offerSoftKey, cipherQKey, &cipherQKeyLen);
     LOGD("QCard_ServerProxyRequestQkey ret = 0x%08x", ret);
     LOGD("QCard_ServerProxyRequestQkey devId = %s", devId);
@@ -312,6 +312,9 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLKey(JNIEnv *env, jobject thiz
     ret = QCard_ReadQKey(secTunnelHandle, keyId, qkeyRead, &qkeyReadLen);
     LOGD("QCard_ReadQKey ret = 0x%08x qkeyRead = %s", ret, ByteArrayToHexStr(qkeyRead, qkeyReadLen));
 
+    // 销毁安全通道
+//    QCard_DestroySecTunnel(secTunnelHandle);
+
     cJSON *negoInfo = nullptr;
     negoInfo = cJSON_CreateObject();
     cJSON_AddStringToObject(negoInfo, "qccsId", qccsId);
@@ -326,6 +329,10 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_negoOLKey(JNIEnv *env, jobject thiz
 
     char *json = nullptr;
     json = cJSON_Print(negoInfo);
+
+//    free(qkeyRead);
+//    free(cipherQKey);
+
     return env->NewStringUTF(json);
 }
 
@@ -408,6 +415,12 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_getOLKeyHandle(JNIEnv *env, jobject
         KeyParam.IVLen = 16;
         ret = QCard_ExternalKeyInit(devHandle, qkey, qkeyLen, SGD_SMS4_CBC, KeyParam, &keyHandle);
         LOGD("QCard_ExternalKeyInit ret = 0x%08x keyHandle = %p", ret, keyHandle);
+
+        unsigned long tryTimes = 0;
+        QCard_KeyToConVerifyPIN(devHandle, keyHandle, appName, conName, pin, &tryTimes);
+        LOGD("QCard_KeyToConVerifyPIN ret = 0x%08x", ret);
+
+//        free(qkey);
     } else {
         ret = QCard_ClientGetDeviceQkey(devHandle, qccsId, sysId, pin, (unsigned char *) flagChkV, flag, offer_soft_key, (unsigned char *) cipherQkey, cipher_qkey_len, plainKeyLen, &devKeyParam, &qKeyNum);
         LOGD("QCard_ClientGetDeviceQkey ret = 0x%08x qKeyNum = %d", ret, qKeyNum);
@@ -420,11 +433,10 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_getOLKeyHandle(JNIEnv *env, jobject
         ret = QCard_deviceQKeyHandlesInit(devHandle, devKeyParam, 0, qKeyNum, SGD_SMS4_CBC, KeyParam, keyHandles);
         LOGD("QCard_deviceQKeyHandlesInit ret = 0x%08x keyHandles[0] = %p", ret, keyHandles[0]);
         keyHandle = keyHandles[0];
-    }
 
-    unsigned long tryTimes = 0;
-    QCard_KeyToConVerifyPIN(devHandle, keyHandle, appName, conName, pin, &tryTimes);
-    LOGD("QCard_KeyToConVerifyPIN ret = 0x%08x", ret);
+//        QCard_DestroyDevQkeyParam(devKeyParam);
+//        QCard_DestroyDeviceKeyHandles(devHandle, keyHandles, qKeyNum);
+    }
 
     env->ReleaseStringUTFChars(qccs_id, qccsId);
     env->ReleaseStringUTFChars(sys_id, sysId);
@@ -462,18 +474,18 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_getSoftKey(JNIEnv *env, jobject thi
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_com_qasky_simkey_1nativelib_qcard_QCard_getOLSoftKey(JNIEnv *env, jobject thiz, jstring qccs_id, jstring sys_id, jbyteArray flag_chk_v, jstring _flag, jint offer_soft_key, jbyteArray cipher_qkey, jint cipher_qkey_len, jstring _pin) {
-    char *qccsId = const_cast<char *>(env->GetStringUTFChars(qccs_id, JNI_FALSE));
-    char *sysId = const_cast<char *>(env->GetStringUTFChars(sys_id, JNI_FALSE));
-    jbyte *flagChkV = env->GetByteArrayElements(flag_chk_v, JNI_FALSE);
-    char *flag = const_cast<char *>(env->GetStringUTFChars(_flag, JNI_FALSE));
-    jbyte *cipherQkey = env->GetByteArrayElements(cipher_qkey, JNI_FALSE);
-    char *pin = const_cast<char *>(env->GetStringUTFChars(_pin, JNI_FALSE));
-
-    unsigned char *qkey = nullptr;
-    unsigned int qkeyLen = 0;
-    unsigned int plainKeyLen = 16;
-
     if (1 == offer_soft_key) {
+        char *qccsId = const_cast<char *>(env->GetStringUTFChars(qccs_id, JNI_FALSE));
+        char *sysId = const_cast<char *>(env->GetStringUTFChars(sys_id, JNI_FALSE));
+        jbyte *flagChkV = env->GetByteArrayElements(flag_chk_v, JNI_FALSE);
+        char *flag = const_cast<char *>(env->GetStringUTFChars(_flag, JNI_FALSE));
+        jbyte *cipherQkey = env->GetByteArrayElements(cipher_qkey, JNI_FALSE);
+        char *pin = const_cast<char *>(env->GetStringUTFChars(_pin, JNI_FALSE));
+
+        unsigned char *qkey = nullptr;
+        unsigned int qkeyLen = 0;
+        unsigned int plainKeyLen = 16;
+
         qkey = (unsigned char *) malloc(32);
         qkeyLen = plainKeyLen;
 
@@ -482,6 +494,14 @@ Java_com_qasky_simkey_1nativelib_qcard_QCard_getOLSoftKey(JNIEnv *env, jobject t
 
         jbyteArray jbyteArray_softKey = env->NewByteArray(qkeyLen);
         env->SetByteArrayRegion(jbyteArray_softKey, 0, qkeyLen, reinterpret_cast<const jbyte *>(qkey));
+
+        free(qkey);
+        env->ReleaseStringUTFChars(qccs_id, qccsId);
+        env->ReleaseStringUTFChars(sys_id, sysId);
+        env->ReleaseByteArrayElements(flag_chk_v, flagChkV, JNI_FALSE);
+        env->ReleaseStringUTFChars(_flag, flag);
+        env->ReleaseByteArrayElements(cipher_qkey, cipherQkey, JNI_FALSE);
+        env->ReleaseStringUTFChars(_pin, pin);
 
         return jbyteArray_softKey;
     } else {
